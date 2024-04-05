@@ -1,20 +1,12 @@
-import { Module } from "@nestjs/common";
-import { ScheduleController } from "./schedule.controller";
-import { ScheduleService } from "./schedule.service";
-import { Schedule, ScheduleSchema } from "./schedule.schema";
-import { MongooseModule } from "@nestjs/mongoose";
-
-const scheduleModule = MongooseModule.forFeature([{
-  name: Schedule.name, schema: ScheduleSchema,
-}]);
+import { Module } from '@nestjs/common';
+import { ScheduleController } from './schedule.controller';
+import { ScheduleService } from './schedule.service';
+import { SchemaModule } from '../schema/schema.module';
 
 @Module({
-  imports: [scheduleModule],
+  imports: [SchemaModule],
   controllers: [ScheduleController],
   providers: [ScheduleService],
-  exports: [scheduleModule, ScheduleService]
+  exports: [ScheduleService],
 })
-
-export class ScheduleModule {
-  
-}
+export class ScheduleModule {}

@@ -21,13 +21,17 @@ describe('AuthService', () => {
     userService = mockDeep<UserService>();
 
     module = await Test.createTestingModule({
-      providers: [AuthService, {
-        provide: JwtService,
-        useValue: jwtService,
-      }, {
-        provide: UserService,
-        useValue: userService,
-      }],
+      providers: [
+        AuthService,
+        {
+          provide: JwtService,
+          useValue: jwtService,
+        },
+        {
+          provide: UserService,
+          useValue: userService,
+        },
+      ],
     }).compile();
 
     service = module.get<AuthService>(AuthService);

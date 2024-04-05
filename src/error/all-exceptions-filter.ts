@@ -1,12 +1,13 @@
 import {
-  ExceptionFilter,
-  Catch,
   ArgumentsHost,
+  Catch,
+  ExceptionFilter,
   HttpException,
   HttpStatus,
 } from '@nestjs/common';
 import { HttpAdapterHost } from '@nestjs/core';
 import { MongoError } from 'mongodb';
+import { Error } from 'mongoose';
 
 @Catch()
 export class AllExceptionsFilter implements ExceptionFilter {
@@ -18,6 +19,8 @@ export class AllExceptionsFilter implements ExceptionFilter {
     const { httpAdapter } = this.httpAdapterHost;
 
     const ctx = host.switchToHttp();
+
+    console.error(exception);
 
     if (exception instanceof MongoError) {
       switch (exception.code) {
@@ -40,6 +43,17 @@ export class AllExceptionsFilter implements ExceptionFilter {
             HttpStatus.BAD_REQUEST,
           );
       }
+    }
+
+    if (exception instanceof Error) {
+      return httpAdapter.reply(
+        ctx.getResponse(),
+        {
+          statusCode: HttpStatus.BAD_REQUEST,
+          message: exception.message,
+        },
+        HttpStatus.BAD_REQUEST,
+      );
     }
 
     const httpStatus =

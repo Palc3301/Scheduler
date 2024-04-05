@@ -1,12 +1,22 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { HydratedDocument } from 'mongoose';
 import * as bcrypt from 'bcrypt';
+import { Client } from './client.schema';
+import { Customer } from './customer.schema';
 
 export type UserDocument = HydratedDocument<User>;
 
-@Schema()
+export enum UserTypeEnum {
+  CLIENT = 'Client',
+  CUSTOMER = 'Customer',
+}
+
+@Schema({ discriminatorKey: 'type' })
 export class User {
   public _id: string;
+
+  @Prop({ required: true, default: UserTypeEnum.CUSTOMER, enum: [Client.name, Customer.name] })
+  public type: string;
 
   @Prop({ required: true })
   public name: string;
@@ -20,7 +30,7 @@ export class User {
 
 export const UserSchema = SchemaFactory.createForClass(User);
 
-UserSchema.pre('save', async function(next) {
+UserSchema.pre('save', async function (next) {
   const salt = await bcrypt.genSalt();
 
   if (this.isModified('password')) {

@@ -1,9 +1,10 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { UserService } from './user.service';
 import { getModelToken } from '@nestjs/mongoose';
-import { User } from './user.schema';
 import { mockDeep } from 'jest-mock-extended';
 import { Model } from 'mongoose';
+import { User, UserTypeEnum } from '../schema/user.schema';
+import { Client } from '../schema/client.schema';
 
 describe('UserService', () => {
   let service: UserService;
@@ -14,6 +15,10 @@ describe('UserService', () => {
     module = await Test.createTestingModule({
       providers: [
         UserService,
+        {
+          provide: getModelToken(Client.name),
+          useValue: mockUserModel,
+        },
         {
           provide: getModelToken(User.name),
           useValue: mockUserModel,
@@ -41,7 +46,7 @@ describe('UserService', () => {
   describe('listUsers', () => {
     it('should return the users', async () => {
       mockUserModel.find.mockResolvedValue([]);
-      const result = await service.listUsers();
+      const result = await service.listUsers(UserTypeEnum.CLIENT);
       expect(result).toEqual([]);
     });
   });

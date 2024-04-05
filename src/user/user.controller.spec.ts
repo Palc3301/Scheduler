@@ -2,6 +2,7 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { UserController } from './user.controller';
 import { UserService } from './user.service';
 import { mockDeep } from 'jest-mock-extended';
+import { UserTypeEnum } from '../schema/user.schema';
 
 describe('UserController', () => {
   const userServiceMock = mockDeep<UserService>();
@@ -31,7 +32,7 @@ describe('UserController', () => {
   describe('listUsers', () => {
     it('should return the users', async () => {
       userServiceMock.listUsers.mockResolvedValue([]);
-      const result = await appController.listUsers();
+      const result = await appController.listUsers(UserTypeEnum.CLIENT);
       expect(result).toEqual([]);
     });
   });

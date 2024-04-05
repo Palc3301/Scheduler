@@ -6,15 +6,24 @@ import { AuthModule } from './auth/auth.module';
 import { APP_FILTER } from '@nestjs/core';
 import { AllExceptionsFilter } from './error/all-exceptions-filter';
 import { ScheduleModule } from './schedule/schedule.module';
-
+import { SchemaModule } from './schema/schema.module';
+import { ServiceOfferingModule } from './serviceOffering/serviceOffering.module';
 
 @Module({
-  imports: [MongooseModule.forRoot(MONGO_URI), UserModule, AuthModule, ScheduleModule],
+  imports: [
+    MongooseModule.forRoot(MONGO_URI),
+    UserModule,
+    AuthModule,
+    ScheduleModule,
+    SchemaModule,
+    ServiceOfferingModule,
+  ],
   controllers: [],
-  providers: [{
-    provide: APP_FILTER,
-    useClass: AllExceptionsFilter,
-  }],
+  providers: [
+    {
+      provide: APP_FILTER,
+      useClass: AllExceptionsFilter,
+    },
+  ],
 })
-export class AppModule {
-}
+export class AppModule {}
